@@ -1,0 +1,39 @@
+{
+  "name": "zp",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": "",
+  "main": "index.js",
+  "files": [
+
+  ],
+  "bin": [
+
+  ],
+  "scripts": {
+    "start": "",
+    "prepare": "",
+    "build": "",
+    "release": "standard-version",
+    "postrelease": "git push && git push origin --tags",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/zppack/zp.git"
+  },
+  "author": "John Chan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zppack/zp/issues"
+  },
+  "homepage": "https://github.com/zppack/zp#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "standard-version": "^9.1.1"
+  },
+  "engines": {
+    "node": ">=12",
+    "npm": ">=6"
+  }
+}
