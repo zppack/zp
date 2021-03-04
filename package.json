@@ -4,12 +4,8 @@
   "description": "",
   "keywords": "",
   "main": "index.js",
-  "files": [
-
-  ],
-  "bin": [
-
-  ],
+  "files": [],
+  "bin": [],
   "scripts": {
     "start": "",
     "prepare": "",
