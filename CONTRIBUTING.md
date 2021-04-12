@@ -1,14 +1,24 @@
 # How to contribute to this project
 
-? How to apply for authority related to this project
+## Discussions
 
-? Code styles, naming rules and direction structure rules
+You can freely create issues to discuss about features, bugs and code enhancements.
 
-? Commit rules and pull-request styles or tips
+No restricted formats but make it more visible if you are to report a bug.
 
-? Documentation or comments rules
+## Code contribution
 
-? Warnings
+At the current stage, you can only create a PR for existing features or codes. If you have a greate idea of a new feature, you can create an issue to discuss it. We will consider incorporating this into development plan if it fits zp's idea very well and is not in the current development plan.
+
+You are to make the following things clear when creating PRs:
+
+1. what kind of PR it is
+
+1. what it is about or what problem it resolves
+
+1. what your commits do or how your commits make sense to the problems
+
+1. your test cases and testing results
 
 ## Commits
 

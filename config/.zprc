@@ -1,0 +1,12 @@
+# TOML v1.0
+
+[init]
+
+[[init.modules]]
+  type = 'template-project'
+
+  defaultRepo = 'template-project-std'
+  [[init.modules.repos]]
+    name = 'template-project-std'
+    path = 'template-project-std'
+    repo = 'git@github.com:zppack/template-project-std.git'
