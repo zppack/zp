@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.3](https://github.com/zppack/zp/compare/v0.0.2...v0.0.3) (2021-04-12)
+
+
+### Documentations
+
+* something about config file ([da96957](https://github.com/zppack/zp/commit/da96957554e9b675744f309c500665abdfaa6fff))
+
 ### 0.0.2 (2021-04-12)
 
 
