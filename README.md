@@ -24,6 +24,25 @@ zp -h
 zp init my-project
 ```
 
+### Commands
+
+#### init
+
+```sh
+zp init {project-name}
+```
+
+Execute the command above and then follow the interactive prompts.
+
+### Config modules
+
+Global config file locates at `%USERHOME%/.zp/.zprc`.
+You can create a `.user.zprc` file at the same directory to customize your zp.
+
+#### How to write a `.user.zprc` config file?
+
+> To be completed...
+
 ## Contributing
 
 [How to contribute to this?](CONTRIBUTING.md)
