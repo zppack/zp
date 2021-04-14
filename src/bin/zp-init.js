@@ -158,6 +158,8 @@ async function initProject(ctx) {
     log.d('Init project: retain temperary files during project initialization in ' + chalk.underline(ctx.zpPath));
   }
 
+  // todo: setup cli plugins here...
+
   const shellCwd = ctx.appPath;
   log.d('Init project: shell cwd = ' + chalk.underline(shellCwd));
 
@@ -272,19 +274,22 @@ async function initProjectModule(module, ctx) {
 
   // merge module results
   log.i('Init project module: moving module files...');
-  const moduleFiles = zpGlob.union(['**', `!${ZP_MODULE_CONFIG_HOME}/**`, '!.git/**', '!package.json'], { dot: true, cwd: path.resolve(moduleCtx.tplPath), nodir: true, realpath: true });
-  moduleFiles.forEach((filepath) => {
-    const destFilePath = path.join(zpDestPath, path.basename(filepath));
-    log.d('Init project module: moving file ' + chalk.underline(filepath) + ' to ' + chalk.underline(destFilePath));
-    fse.copySync(filepath, destFilePath);
+  const cwd = path.resolve(moduleCtx.tplPath);
+  log.d('Init project module: moving module files cwd = ', chalk.underline(cwd));
+  const moduleFiles = zpGlob.union(['**', `!${ZP_MODULE_CONFIG_HOME}/**`, '!.git/**', '!package.json'], { dot: true, cwd, nodir: true });
+  moduleFiles.forEach((file) => {
+    const sourceFilePath = path.join(cwd, file);
+    const destFilePath = path.join(zpDestPath, file);
+    log.d('Init project module: moving file ' + chalk.underline(sourceFilePath) + ' to ' + chalk.underline(destFilePath));
+    fse.copySync(sourceFilePath, destFilePath);
   });
   log.i(`Init project module: ${moduleFiles.length} files moved.`);
 
   const pkgFilePath = path.join(moduleCtx.tplPath, 'package.json');
   const destPkgFilePath = path.join(zpDestPath, 'package.json');
   if (fse.existsSync(destPkgFilePath)) {
-    pkgContent = fse.readFileSync(pkgFilePath, 'utf8');
-    destPkgContent = fse.readFileSync(destPkgFilePath, 'utf8');
+    const pkgContent = fse.readFileSync(pkgFilePath, 'utf8');
+    const destPkgContent = fse.readFileSync(destPkgFilePath, 'utf8');
     const nextPkgContent = mergePackage(destPkgContent, pkgContent);
     fse.writeFileSync(destPkgFilePath, nextPkgContent);
     log.i('Init project module: package.json file merged.');
