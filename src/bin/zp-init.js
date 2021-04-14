@@ -163,13 +163,18 @@ async function initProject(ctx) {
   const shellCwd = ctx.appPath;
   log.d('Init project: shell cwd = ' + chalk.underline(shellCwd));
 
-  log.i('Init project: install npm dependencies...');
-  log.d('Init project: exec shell ' + chalk.blue('npm install'));
-  execShellSync('npm install', { cwd: shellCwd }, 3002, 'This maybe an error of npm itself when executing shell `npm install`');
-
   log.i('Iint project: init git env...');
   log.d('Init project: exec shell ' + chalk.blue('git init'));
   execShellSync('git init', { cwd: shellCwd }, 3001, 'This maybe an error of git itself when executing shell `git init`');
+
+  log.i('Init project: install npm dependencies...');
+  log.d('Init project: exec shell ' + chalk.blue('npm install'));
+  try {
+    execShellSync('npm install', { cwd: shellCwd }, 3002, 'This maybe an error of npm itself when executing shell `npm install`');
+  } catch (err) {
+    log.e(chalk.redBright(`${err} (Error Code: ${process.exitCode})`));
+    // process.exitCode = 1;
+  }
 
   log.i('Init project: project initialization done.');
 }
