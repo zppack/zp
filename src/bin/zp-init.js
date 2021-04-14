@@ -78,7 +78,7 @@ async function start({ name, ...rest }) {
     fse.mkdirSync(ctx.zpDestPath);
   }
 
-  // ask whether to continue or to jump to the last
+  // ask whether to continue or to skip to the last
 
   await initProject(ctx);
 
@@ -132,12 +132,12 @@ async function initProject(ctx) {
     const len = modules.length;
     let moduleIndex = 0;
     while (moduleIndex < len) {
-      // ask whether to continue or jump to next module, or break all.
+      // ask whether to continue or skip to next module, or break all.
       // if continue
       const module = modules[moduleIndex];
       await initProjectModule(module, ctx);
       moduleIndex += 1;
-      // else if jump to next
+      // else if skip to next
       // moduleIndex += 1;
       // else if break all
       // break; // or moduleIndex = len;
@@ -200,7 +200,12 @@ async function initProjectModule(module, ctx) {
     });
     repoObj = repos.find(item => item.name === repoName);
   }
-  log.d('Init project module: repo name = ' + chalk.underline(repoObj.name) + ', repo url = ' + chalk.underline(repoObj.repo));
+  log.d('Init project module: repo name = ' + chalk.underline(repoObj.name) + ', repo url = ' + chalk.underline(repoObj.repo) + ', repo path = ' + chalk.underline(repoObj.path));
+
+  if (!repoObj.path || !repoObj.repo) {
+    log.w(`Init project module: lack of "path" or "repo" config of module repo "${repoObj.name}", module "${type}" skipped.`);
+    return;
+  }
 
   log.i('Init project module: cloning module template from ' + chalk.underline(repoObj.repo));
   const sh = `git clone ${repoObj.repo} ${zpPath}/${repoObj.path}`;
