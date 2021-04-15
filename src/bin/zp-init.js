@@ -170,7 +170,7 @@ async function initProject(ctx) {
   log.i('Init project: install npm dependencies...');
   log.d('Init project: exec shell ' + chalk.blue('npm install'));
   try {
-    execShellSync('npm install', { cwd: shellCwd }, 3002, 'This maybe an error of npm itself when executing shell `npm install`');
+    execShellSync('npm install --ignore-scripts', { cwd: shellCwd }, 3002, 'This maybe an error of npm itself when executing shell `npm install`');
   } catch (err) {
     log.e(chalk.redBright(`${err} (Error Code: ${process.exitCode})`));
     // process.exitCode = 1;
