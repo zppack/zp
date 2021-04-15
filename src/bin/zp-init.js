@@ -296,16 +296,21 @@ async function initProjectModule(module, ctx) {
   log.i(`Init project module: ${moduleFiles.length} files moved.`);
 
   const pkgFilePath = path.join(moduleCtx.tplPath, 'package.json');
-  const destPkgFilePath = path.join(zpDestPath, 'package.json');
-  if (fse.existsSync(destPkgFilePath)) {
-    const pkgContent = fse.readFileSync(pkgFilePath, 'utf8');
-    const destPkgContent = fse.readFileSync(destPkgFilePath, 'utf8');
-    const nextPkgContent = mergePackage(destPkgContent, pkgContent);
-    fse.writeFileSync(destPkgFilePath, nextPkgContent);
-    log.i('Init project module: package.json file merged.');
-  } else {
-    fse.copySync(pkgFilePath, destPkgFilePath);
-    log.i('Init project module: package.json file moved.');
+  if (fse.pathExistsSync(pkgFilePath)) {
+    log.d('Init project module: find a package.json file, path = ', chalk.underline(pkgFilePath));
+    const destPkgFilePath = path.join(zpDestPath, 'package.json');
+    if (fse.pathExistsSync(destPkgFilePath)) {
+      log.i('Init project module: merging package.json file...');
+      log.d('Init project module: already exists a package.json and will merge them. path = ', chalk.underline(destPkgFilePath));
+      const pkgContent = fse.readFileSync(pkgFilePath, 'utf8');
+      const destPkgContent = fse.readFileSync(destPkgFilePath, 'utf8');
+      const nextPkgContent = mergePackage(destPkgContent, pkgContent);
+      fse.writeFileSync(destPkgFilePath, nextPkgContent);
+      log.i('Init project module: package.json file merged.');
+    } else {
+      fse.copySync(pkgFilePath, destPkgFilePath);
+      log.i('Init project module: package.json file moved.');
+    }
   }
 
   fse.removeSync(moduleCtx.tplBasePath);
