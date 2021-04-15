@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.7](https://github.com/zppack/zp/compare/v0.0.6...v0.0.7) (2021-04-15)
+
+
+### Bug Fixes
+
+* fix the problem which happens in the case executing `npm install` when there is a `prepare` npm script config, which runs some commands like `build` or `pack`, but codes for builing or packing are not ready, by adding `--ignore-scripts` argument ([aeb185a](https://github.com/zppack/zp/commit/aeb185affc0a369cecd439dc1a9ab560b08d88e8))
+
 ### [0.0.6](https://github.com/zppack/zp/compare/v0.0.5...v0.0.6) (2021-04-14)
 
 ### [0.0.5](https://github.com/zppack/zp/compare/v0.0.4...v0.0.5) (2021-04-14)
