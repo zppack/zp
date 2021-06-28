@@ -101,7 +101,9 @@ const hooks = {
   call(hookName, ctx) {
     const hook = this.map.get(hookName);
     if (hook !== undefined && hook.taps && hook.taps.length > 0) {
-      hook.callAsync(ctx);
+      hook.callAsync(ctx, () => {
+        log.i(`✨ Tapable: hook ${chalk.underline(hookName)} done.`);
+      });
     }
   },
 };

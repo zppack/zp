@@ -9,4 +9,53 @@
   [[init.modules.repos]]
     name = 'template-project-std'
     path = 'template-project-std'
-    repo = 'git@github.com:zppack/template-project-std.git'
+    repo = 'https://github.com/zppack/template-project-std.git'
+
+[[init.modules]]
+  type = 'template-build'
+
+  defaultRepo = 'template-build-lib'
+
+  [[init.modules.repos]]
+    name = 'empty'
+  [[init.modules.repos]]
+    name = 'template-build-lib'
+    path = 'template-build-lib'
+    repo = 'https://github.com/zppack/template-build-lib.git'
+
+[[init.plugins]]
+  name = 'ZpIntroPlugin'
+  hook = 'after-create'
+  pkgName = '@zppack/zp-plugin-intro'
+  pkgVersion = 'latest'
+
+  [init.plugins.config]
+
+    # interpolation
+    # prefix = '{'
+    # suffix = '}'
+
+    [[init.plugins.config.list]]
+      text = ' Now you can do following: '
+      chalk = ['yellow', 'underline', 'bgBlue']
+    [[init.plugins.config.list]]
+      text = ' '
+    [[init.plugins.config.list]]
+      [[init.plugins.config.list.texts]]
+        text = '{zp-tab}'
+      [[init.plugins.config.list.texts]]
+        text = 'cd {projectName}'
+        chalk = ['blueBright']
+    [[init.plugins.config.list]]
+      text = ' '
+    [[init.plugins.config.list]]
+      [[init.plugins.config.list.texts]]
+        text = '{zp-tab}'
+      [[init.plugins.config.list.texts]]
+        text = 'npm start'
+        chalk = ['blueBright']
+      [[init.plugins.config.list.texts]]
+        text = '{zp-tab}(open browser at "localhost:3000")'
+        chalk = ['gray']
+    [[init.plugins.config.list]]
+      text = '{zp-newline}'
