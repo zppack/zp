@@ -79,7 +79,7 @@ const hooks = {
     const { name, hook, pkgName, pkgVersion, config } = plugin;
     const pkg = `${pkgName}@${pkgVersion}`;
     log.i(`✨ Tapable: tap hook ${chalk.underline(hook)} with plugin ${chalk.yellow.underline(name, `(${pkg})`)}.`);
-    log.d(`✨ Tapable: installing plugin ${chalk.yellow.underline(pkg)}. Plugin configs = \n`, chalk.gray(Json.stringify(config)));
+    log.d(`✨ Tapable: installing plugin ${chalk.yellow.underline(pkg)}. Plugin configs = \n`, chalk.gray(JSON.stringify(config)));
     const sh = `npm install -g ${pkg}`;
     execShellSync(sh, 3002, `Unknown error of cmd: ${chalk.underline(sh)}. This maybe an error of npm itself.`);
     log.d('✨ Tapable: plugin ' + chalk.yellow.underline(pkg) + ' installed');
