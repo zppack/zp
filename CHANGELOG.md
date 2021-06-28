@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.11](https://github.com/zppack/zp/compare/v0.0.10...v0.0.11) (2021-06-28)
+
+
+### Bug Fixes
+
+* Fix tapable async hook lack of callback ([818acc5](https://github.com/zppack/zp/commit/818acc520ba15cd9cea91d4177d5c36afd43d0e4))
+
 ### [0.0.10](https://github.com/zppack/zp/compare/v0.0.9...v0.0.10) (2021-06-28)
 
 
