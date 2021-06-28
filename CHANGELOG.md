@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.9](https://github.com/zppack/zp/compare/v0.0.8...v0.0.9) (2021-06-28)
+
+
+### Features
+
+* support plugins with tapable hooks. ([c1809d2](https://github.com/zppack/zp/commit/c1809d2c19bd91b90a80dcc8989b387a8653be44))
+
 ### [0.0.8](https://github.com/zppack/zp/compare/v0.0.7...v0.0.8) (2021-04-15)
 
 
