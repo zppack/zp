@@ -7,6 +7,7 @@ import inquirer from 'inquirer';
 import chalk from 'chalk';
 import Toml from '@ltd/j-toml';
 import importGlobal from 'import-global';
+import { HookMap, AsyncSeriesHook } from 'tapable';
 import log from '@zppack/log';
 import zpGlob from '@zppack/glob';
 import mergePackage from 'merge-packages';
@@ -44,6 +45,67 @@ program.parse(process.argv);
 
 // console.log(program.args, opts);
 
+// tapable hooks
+const hooks = {
+  // tapable hooks for plugins to tap
+  list: [
+    'before-create', // before creating project directory
+    'before-init', // after creating project directory and setup context, before initialization start
+    'before-module-install', // [if there are modules config] before every module initialzation start
+    'before-module-middleware', // [if there are modules config] after downloading the module, before middlewares install
+    'before-module-merge', // [if there are modules config] after module middlewares processing done, before merge module files to `zpDestPath`
+    'after-module', // [if there are modules config] after module files are merged
+    'after-module-all', // after all module files merged, or after bypass module initialization with no modules config
+    'after-init', // after files moved to appPath and cleaning up done, before git initialization and npm installation
+    'after-create', // after git initialization and npm installlation, everything done.
+  ],
+  map: new HookMap(key => new AsyncSeriesHook(['ctx'])),
+  init: () => {
+    this.list.forEach((hookName) => {
+      this.map.for(hookName).intercept({
+        register: ({ name }) => {
+          log.i(`✨ Tapable: registered a plugin "${chalk.yellow.underline(name)}" triggered by the hook ${chalk.bgBlueBright(` ${hookName} `)}.`);
+        },
+        call: (ctx) => {
+          log.d(`✨ Tapable: before the hook ${chalk.bgBlueBright(` ${hookName} `)} calls. Current context: \n`, chalk.gray(JSON.stringify(ctx)));
+        },
+        tap: ({ name }) => {
+          log.i(`✨ Tapable: before the plugin "${chalk.yellow.underline(name)}" taps into the hook ${chalk.bgBlueBright(` ${hookName} `)}.`);
+        },
+      });
+    });
+  },
+  tap: (plugin) => {
+    const { name, hook, pkgName, pkgVersion, config } = plugin;
+    const pkg = `${pkgName}@${pkgVersion}`;
+    log.i(`✨ Tapable: tap hook ${chalk.underline(hook)} with plugin ${chalk.yellow.underline(name, `(${pkg})`)}.`);
+    log.d(`✨ Tapable: installing plugin ${chalk.yellow.underline(pkg)}. Plugin configs = \n`, chalk.gray(Json.stringify(config)));
+    const sh = `npm install -g ${pkg}`;
+    execShellSync(sh, 3002, `Unknown error of cmd: ${chalk.underline(sh)}. This maybe an error of npm itself.`);
+    log.d('✨ Tapable: plugin ' + chalk.yellow.underline(pkg) + ' installed');
+    let pluginFn = importGlobal(pkgName);
+    pluginFn = pluginFn.default ?? pluginFn;
+    const pluginFnTag = pluginFn[Symbol.toStringTag];
+    if (pluginFnTag === 'AsyncFunction' || pluginFnTag === 'GeneratorFunction') {
+      this.map.for(hook).tapAsync(name, (ctx, cb) => {
+        const pluginCtx = { ...ctx, pluginConfig: config };
+        pluginFn(pluginCtx, cb);
+      });
+    } else {
+      this.map.for(hook).tap(name, (ctx) => {
+        const pluginCtx = { ...ctx, pluginConfig: config };
+        pluginFn(pluginCtx);
+      });
+    }
+  },
+  call: (hookName, ctx) => {
+    const hook = this.map.get(hookName);
+    if (hook !== undefined && hook.taps && hook.taps.length > 0) {
+      hook.callAsync(ctx);
+    }
+  },
+};
+
 async function start({ name, ...rest }) {
   log.i('Init start >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
   log.d(name, rest);
@@ -51,23 +113,31 @@ async function start({ name, ...rest }) {
   const date = new Date();
   const dateStr = `${date.getFullYear()}.${date.getMonth() + 1}`;
 
-  /**
-   * 1. base 工程
-   * 2. 编译类型及编译配置
-   *    2.1 框架选择与配置
-   *    2.2 ts/js 选择与配置
-   *    2.3 css 处理器选择与配置
-   *    2.4 环境变量配置
-   *    2.5 webpack 配置
-   * 3. lint 配置
-   * 4. 工程结构模板选择与配置（单页/多页/webapp/B/C）
-   * 5. 打包与部署配置
-   */
-
   const zprc = await getZprc();
   log.d('Init zprc: \n', JSON.stringify(zprc));
+
+  // init hooks
+  log.i('Initializing tapable hooks...');
+  hooks.init();
+  // register plugins that tap into hooks
+  log.i('Registering plugins...');
+  const { plugins } = zprc.init || {};
+  log.d('Registering plugins: ', chalk.gray(JSON.stringify(plugins)));
+  if (plugins && plugins.length > 0) {
+    plugins.forEach((plugin) => {
+      hooks.tap(plugin);
+    });
+  } else {
+    log.i('Bypass plugins registering for no configurations.')
+  }
+
   const options = { name, projectName: name, date: dateStr, ...rest };
   const ctx = { options, zprc };
+
+  // call hook "before-create"
+  hooks.call('before-create', ctx);
+
+  // create project directory
   await createProject(ctx);
 
   // create context
@@ -78,10 +148,7 @@ async function start({ name, ...rest }) {
     fse.mkdirSync(ctx.zpDestPath);
   }
 
-  // ask whether to continue or to skip to the last
-
   await initProject(ctx);
-
 }
 
 async function createProject(ctx) {
@@ -119,6 +186,10 @@ async function createProject(ctx) {
 
 async function initProject(ctx) {
   log.i('Init project: begin to init project.');
+
+  // call hook "before-init"
+  hooks.call('before-init', ctx);
+
   const { zprc } = ctx;
   const { modules } = zprc.init || {};
   if (!modules) {
@@ -126,7 +197,7 @@ async function initProject(ctx) {
     throw Error(`Global config not found. Please check your global config at ${chalk.underline(GLOBAL_CONFIG_HOME)}, or 're-install' zp.`);
   }
 
-  log.i('Init project: init project modules...');
+  log.i('Init project: initializing project modules...');
 
   if (modules.length > 0) {
     const len = modules.length;
@@ -147,6 +218,9 @@ async function initProject(ctx) {
     log.w('Init project: no modules in config file.');
   }
 
+  // call hook "after-module-all"
+  hooks.call('after-module-all', ctx);
+
   log.i('Init project: moving project files...');
   log.d('Init project: moving project files from ' + chalk.underline(ctx.zpDestPath) + ' to ' + chalk.underline(ctx.appPath));
   fse.copySync(ctx.zpDestPath, ctx.appPath);
@@ -158,17 +232,18 @@ async function initProject(ctx) {
     log.d('Init project: retain temperary files during project initialization in ' + chalk.underline(ctx.zpPath));
   }
 
-  // todo: setup cli plugins here...
+  // call hook "after-init"
+  hooks.call('after-init', ctx);
 
   const shellCwd = ctx.appPath;
   log.d('Init project: shell cwd = ' + chalk.underline(shellCwd));
 
-  log.i('Iint project: init git env...');
-  log.d('Init project: exec shell ' + chalk.blue('git init'));
+  log.i('Iint project: initializing git environments...');
+  log.d('Init project: executing shell ' + chalk.blue('git init'));
   execShellSync('git init', { cwd: shellCwd }, 3001, 'This maybe an error of git itself when executing shell `git init`');
 
-  log.i('Init project: install npm dependencies...');
-  log.d('Init project: exec shell ' + chalk.blue('npm install'));
+  log.i('Init project: installing npm dependencies...');
+  log.d('Init project: executing shell ' + chalk.blue('npm install'));
   try {
     execShellSync('npm install --ignore-scripts', { cwd: shellCwd }, 3002, 'This maybe an error of npm itself when executing shell `npm install`');
   } catch (err) {
@@ -177,11 +252,17 @@ async function initProject(ctx) {
   }
 
   log.i('Init project: project initialization done.');
+
+  // call hook "after-create"
+  hooks.call('after-create', ctx);
 }
 
 async function initProjectModule(module, ctx) {
   const { options, zpPath, zpDestPath } = ctx;
   const { type, defaultRepo, repos } = module;
+
+  // call hook "before-module-install"
+  hooks.call('before-module-install', { ...ctx, module });
 
   log.i('Init project module: start project module, type = ', chalk.underline(type));
 
@@ -214,8 +295,11 @@ async function initProjectModule(module, ctx) {
 
   log.i('Init project module: cloning module template from ' + chalk.underline(repoObj.repo));
   const sh = `git clone ${repoObj.repo} ${zpPath}/${repoObj.path}`;
-  log.d('Init project module: execute command: ' + chalk.blue(sh));
+  log.d('Init project module: executing command: ' + chalk.blue(sh));
   execShellSync(sh, 3001, `Unknown error of cmd: ${chalk.underline(sh)}. Check your git client and this maybe an error of that.`);
+
+  // call hook "before-module-install"
+  hooks.call('before-module-install', { ...ctx, module });
 
   if (isDebugMode) {
     log.d('Init project module: back-up template to ' + chalk.underline(`.${repoObj.path}`));
@@ -237,6 +321,10 @@ async function initProjectModule(module, ctx) {
   const configToml = fse.readFileSync(configTomlPath, 'utf8');
   const moduleConfig = Toml.parse(configToml, 1.0, '\n', false);
   moduleCtx.moduleConfig = moduleConfig;
+
+  // call hook "before-module-middleware"
+  hooks.call('before-module-middleware', { ...ctx, moduleCtx });
+
   // first version: only support object of middleware package name and version, such as `{ '@zppack/zp-vars': '0.1.0' }`.
   const middlewares = Object.entries(moduleConfig.middlewares || {});
   if (middlewares.length > 0) {
@@ -244,12 +332,12 @@ async function initProjectModule(module, ctx) {
     const usedMiddlewares = await Promise.all(middlewares.map(([pkgName, pkgVersion]) => {
       return new Promise((resolve) => {
         const pkg = `${pkgName}@${pkgVersion}`;
-        log.d('Init project module: install middleware ' + chalk.underline(pkg));
+        log.d('Init project module: installing middleware ' + chalk.underline(pkg));
         const sh = `npm install -g ${pkg}`;
         execShellSync(sh, 3002, `Unknown error of cmd: ${chalk.underline(sh)}. This maybe an error of npm itself.`);
         log.d('Init project module: middleware ' + chalk.underline(pkg) + ' installed');
         const middleware = importGlobal(pkgName);
-        resolve(middleware.default || middlewares);
+        resolve(middleware.default ?? middlewares);
       });
     }));
     log.d('Init project module: installing module middlewares done.');
@@ -282,6 +370,9 @@ async function initProjectModule(module, ctx) {
   }
   ctx.options = moduleCtx.options;
 
+  // call hook "before-module-merge"
+  hooks.call('before-module-merge', { ...ctx, moduleCtx });
+
   // merge module results
   log.i('Init project module: moving module files...');
   const cwd = path.resolve(moduleCtx.tplPath);
@@ -297,7 +388,7 @@ async function initProjectModule(module, ctx) {
 
   const pkgFilePath = path.join(moduleCtx.tplPath, 'package.json');
   if (fse.pathExistsSync(pkgFilePath)) {
-    log.d('Init project module: find a package.json file, path = ', chalk.underline(pkgFilePath));
+    log.d('Init project module: a package.json file found, path = ', chalk.underline(pkgFilePath));
     const destPkgFilePath = path.join(zpDestPath, 'package.json');
     if (fse.pathExistsSync(destPkgFilePath)) {
       log.i('Init project module: merging package.json file...');
@@ -315,6 +406,9 @@ async function initProjectModule(module, ctx) {
 
   fse.removeSync(moduleCtx.tplBasePath);
   log.i('Init project module: cleaning up done.');
+
+  // call hook "after-module"
+  hooks.call('after-module', { ...ctx, moduleCtx });
 
   log.i('Init project module: complete a project module.');
 }
