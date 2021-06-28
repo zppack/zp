@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.12](https://github.com/zppack/zp/compare/v0.0.11...v0.0.12) (2021-06-28)
+
+
+### Bug Fixes
+
+* Fix a stupid error that writing JSON to Json ([74a9ef6](https://github.com/zppack/zp/commit/74a9ef619d0ea87ab0f0e6cd888c7b0844440d94))
+
 ### [0.0.11](https://github.com/zppack/zp/compare/v0.0.10...v0.0.11) (2021-06-28)
 
 
