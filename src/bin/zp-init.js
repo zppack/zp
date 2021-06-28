@@ -60,7 +60,7 @@ const hooks = {
     'after-create', // after git initialization and npm installlation, everything done.
   ],
   map: new HookMap(key => new AsyncSeriesHook(['ctx'])),
-  init: () => {
+  init() {
     this.list.forEach((hookName) => {
       this.map.for(hookName).intercept({
         register: ({ name }) => {
@@ -75,7 +75,7 @@ const hooks = {
       });
     });
   },
-  tap: (plugin) => {
+  tap(plugin) {
     const { name, hook, pkgName, pkgVersion, config } = plugin;
     const pkg = `${pkgName}@${pkgVersion}`;
     log.i(`✨ Tapable: tap hook ${chalk.underline(hook)} with plugin ${chalk.yellow.underline(name, `(${pkg})`)}.`);
@@ -98,7 +98,7 @@ const hooks = {
       });
     }
   },
-  call: (hookName, ctx) => {
+  call(hookName, ctx) {
     const hook = this.map.get(hookName);
     if (hook !== undefined && hook.taps && hook.taps.length > 0) {
       hook.callAsync(ctx);
