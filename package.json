@@ -1,6 +1,6 @@
 {
   "name": "@zppack/zp",
-  "version": "0.0.15",
+  "version": "0.1.0",
   "description": "A front-end project engineering system which highly supports customization through modularization, middlewares and plugins.",
   "keywords": [
     "front-end project engineering",

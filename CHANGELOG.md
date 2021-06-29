@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.0](https://github.com/zppack/zp/compare/v0.0.15...v0.1.0) (2021-06-29)
+
+
+### Features
+
+* add version update tips ([12ab72a](https://github.com/zppack/zp/commit/12ab72a5d82ccc2ca7a6b084e8e039649b0526c8))
+
 ### [0.0.15](https://github.com/zppack/zp/compare/v0.0.14...v0.0.15) (2021-06-29)
 
 
