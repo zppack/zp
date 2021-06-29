@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.15](https://github.com/zppack/zp/compare/v0.0.14...v0.0.15) (2021-06-29)
+
+
+### Features
+
+* zp init support config preset through options `-p, --preset <preset-name>` ([fb5bf8d](https://github.com/zppack/zp/commit/fb5bf8de735e8e8f5bc57bb187f6a904bac55edc))
+
 ### [0.0.14](https://github.com/zppack/zp/compare/v0.0.13...v0.0.14) (2021-06-28)
 
 ### [0.0.13](https://github.com/zppack/zp/compare/v0.0.12...v0.0.13) (2021-06-28)
