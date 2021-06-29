@@ -36,6 +36,8 @@
     # suffix = '}'
 
     [[init.plugins.config.list]]
+      text = ' '
+    [[init.plugins.config.list]]
       text = ' Now you can do following: '
       chalk = ['yellow', 'underline', 'bgBlue']
     [[init.plugins.config.list]]

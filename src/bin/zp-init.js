@@ -29,9 +29,10 @@ const isDebugMode = process.env.ZP_DEBUG || process.env.DEBUG;
 program.version(pkg.version, '-v, --version');
 
 program
-  .arguments('[name]', 'Project name')
+  .option('-p, --preset <preset-name>', 'Using specific config presets')
+  .arguments('[name]')
   .action((name, options, command) => {
-    // log.d('options: ', options, command.opts())
+    // log.d('options: ', options, command.opts());
     start({ name, ...options }).then(() => {
       log.i('Init Completed.');
     }).catch((err) => {
@@ -108,14 +109,14 @@ const hooks = {
   },
 };
 
-async function start({ name, ...rest }) {
+async function start({ name, preset, ...rest }) {
   log.i('Init start >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-  log.d(name, rest);
+  log.d(name, preset, rest);
 
   const date = new Date();
   const dateStr = `${date.getFullYear()}.${date.getMonth() + 1}`;
 
-  const zprc = await getZprc();
+  const zprc = await getZprc(preset);
   log.d('Init zprc: \n', JSON.stringify(zprc));
 
   // init hooks

@@ -12,10 +12,11 @@ function parse(content) {
   return Toml.parse(content, 1.0, '\n', false);
 }
 
-export default () => {
+export default (preset) => {
   return new Promise((resolve, reject) => {
     try {
-      const customConfigFilePath = path.join(GLOBAL_CONFIG_HOME, GLOBAL_CUSTOM_CONFIG_NAME);
+      const presetConfigName = `.${preset}.zprc`;
+      const customConfigFilePath = path.join(GLOBAL_CONFIG_HOME, preset ? presetConfigName : GLOBAL_CUSTOM_CONFIG_NAME);
       const globalConfigFilePath = path.join(GLOBAL_CONFIG_HOME, GLOBAL_CONFIG_NAME);
 
       let customConfig = {};

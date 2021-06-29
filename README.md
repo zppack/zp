@@ -6,10 +6,10 @@ A front-end project engineering system which highly supports customization throu
 
 - [x] Project initialization modularize
 - [x] Initialization modules support processing middlewares
-- [ ] Support plugins after modules initialization
+- [x] Support plugins with tapable hooks
+- [x] Support init config preset
 - [ ] Project management tool
 - [ ] Support customize cli command
-- [ ] Support events plugins through something like `tapable`
 - [ ] Update and upgrade mechanism and tools
 - [ ] Developing server improvement
 - [ ] Building tool improvement
@@ -21,7 +21,10 @@ npm install @zppack/zp --global
 
 zp -h
 
-zp init my-project
+zp init -h
+
+# Debug mode
+zp init -d my-project
 ```
 
 ### Commands
@@ -29,10 +32,16 @@ zp init my-project
 #### init
 
 ```sh
-zp init {project-name}
+zp init [project-name] [--preset <preset-name>]
 ```
 
 Execute the command above and then follow the interactive prompts.
+
+##### options
+
+- `preset`: "--preset" or "-p" options with a required parameter "preset-name" will use `.${preset-name}.zprc` config file instead of `.user.zprc`.
+
+- `debug`: "--debug" or "-d" options will switch on debug mode under which you can get some extra logs that helps debug.
 
 ### Config modules
 
@@ -43,6 +52,9 @@ You can create a `.user.zprc` file at the same directory to customize your zp.
 
 > To be completed...
 
+#### Config Presets
+
+Write a config file named as `.{preset-name}.zprc`. Then run `zp init --preset {preset-name}`
 ## Contributing
 
 [How to contribute to this?](CONTRIBUTING.md)
