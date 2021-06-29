@@ -51,7 +51,8 @@
     "import-global": "^0.1.0",
     "inquirer": "^8.0.0",
     "merge-packages": "^0.1.5",
-    "tapable": "^2.2.0"
+    "tapable": "^2.2.0",
+    "update-notifier": "^5.1.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.13.0",

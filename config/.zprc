@@ -36,12 +36,10 @@
     # suffix = '}'
 
     [[init.plugins.config.list]]
-      text = ' '
-    [[init.plugins.config.list]]
       text = ' Now you can do following: '
-      chalk = ['yellow', 'underline', 'bgBlue']
+      chalk = ['yellow', 'bgBlue']
     [[init.plugins.config.list]]
-      text = ' '
+      text = '{zp-newline}'
     [[init.plugins.config.list]]
       [[init.plugins.config.list.texts]]
         text = '{zp-tab}'
@@ -49,15 +47,11 @@
         text = 'cd {name}'
         chalk = ['blueBright']
     [[init.plugins.config.list]]
-      text = ' '
-    [[init.plugins.config.list]]
       [[init.plugins.config.list.texts]]
         text = '{zp-tab}'
       [[init.plugins.config.list.texts]]
         text = 'npm start'
         chalk = ['blueBright']
       [[init.plugins.config.list.texts]]
-        text = '{zp-tab}(open browser at "localhost:3000")'
+        text = '  # open browser at "localhost:3000"'
         chalk = ['gray']
-    [[init.plugins.config.list]]
-      text = '{zp-newline}'

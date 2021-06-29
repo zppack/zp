@@ -4,6 +4,7 @@ import program from 'commander';
 import chalk from 'chalk';
 import log from '@zppack/log';
 import pkg from '../../package.json';
+import '../lib/update-util';
 
 program.version(pkg.version, '-v, --version');
 
