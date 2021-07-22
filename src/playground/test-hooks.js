@@ -15,17 +15,17 @@ hookList.forEach((hookName) => {
       console.log('[Intercept] Going to call hook: ', tapInfo.name);
     },
     call: (ctx) => {
-    console.log('[Intercept] Before call hook: ', ctx);
+      console.log('[Intercept] Before call hook: ', ctx);
     },
   });
 });
 
 console.log('-- to tap');
 hookMap.for('beginning').tap('BeginningPlugin', (ctx) => {
-  console.log('tap begging 1:', ctx);
+  console.log('tap begining 1:', ctx);
 });
 hookMap.for('beginning').tap('BeginningPlugin2', (ctx) => {
-  console.log('tap begging 2:', ctx);
+  console.log('tap begining 2:', ctx);
 });
 
 hookMap.for('middle').tap('MiddlePlugin', (ctx) => {
@@ -48,8 +48,8 @@ hookList.forEach((hookName) => {
 console.log('-- end');
 const fn1 = async () => {};
 const fn2 = function* () {};
-console.log('fn1: ', fn1[Symbol.toStringTag]);
-console.log('fn2: ', fn2[Symbol.toStringTag]);
+console.log('fn1: ', fn1[Symbol.toStringTag], fn1().then);
+console.log('fn2: ', fn2[Symbol.toStringTag], fn2().next());
 
 const asyncHook = new AsyncSeriesHook(['ctx']);
 asyncHook.tapAsync('TestAsyncHookPlugin', (ctx, cb) => {
@@ -64,7 +64,7 @@ asyncHook.tapAsync('TestAsyncHookPlugin2', (ctx, cb) => {
   cb();
 });
 asyncHook.callAsync({ g: 1, h: 2 }, () => {
-  console.log('call async');
+  console.log('call async ');
 });
 asyncHook.callAsync({ t: 1, y: 2 }, () => {
   console.log('call async 2');

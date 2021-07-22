@@ -65,13 +65,13 @@ const hooks = {
     this.list.forEach((hookName) => {
       this.map.for(hookName).intercept({
         register: ({ name }) => {
-          log.i(`✨ Tapable: registered a plugin "${chalk.yellow.underline(name)}" triggered by the hook ${chalk.bgBlueBright(` ${hookName} `)}.`);
+          log.i(`✨ Tapable: [intercept:register] registered a plugin "${chalk.yellow.underline(name)}" triggered by the hook ${chalk.bgBlueBright(` ${hookName} `)}.`);
         },
         call: (ctx) => {
-          log.d(`✨ Tapable: before the hook ${chalk.bgBlueBright(` ${hookName} `)} calls. Current context: \n`, chalk.gray(JSON.stringify(ctx)));
+          log.d(`✨ Tapable: [intercept:call] before the hook ${chalk.bgBlueBright(` ${hookName} `)} calls. Current context: \n`, chalk.gray(JSON.stringify(ctx)));
         },
         tap: ({ name }) => {
-          log.i(`✨ Tapable: before the plugin "${chalk.yellow.underline(name)}" taps into the hook ${chalk.bgBlueBright(` ${hookName} `)}.`);
+          log.i(`✨ Tapable: [intercept:tap] before the plugin "${chalk.yellow.underline(name)}" taps into the hook ${chalk.bgBlueBright(` ${hookName} `)}.`);
         },
       });
     });
@@ -87,10 +87,20 @@ const hooks = {
     let pluginFn = importGlobal(pkgName);
     pluginFn = pluginFn.default ?? pluginFn;
     const pluginFnTag = pluginFn[Symbol.toStringTag];
-    if (pluginFnTag === 'AsyncFunction' || pluginFnTag === 'GeneratorFunction') {
+    if (pluginFnTag === 'AsyncFunction') {
       this.map.for(hook).tapAsync(name, (ctx, cb) => {
         const pluginCtx = { ...ctx, pluginConfig: config };
-        pluginFn(pluginCtx, cb);
+        pluginFn(pluginCtx).then(cb);
+      });
+    } else if (pluginFnTag === 'GeneratorFunction') {
+      this.map.for(hook).tapAsync(name, (ctx, cb) => {
+        const pluginCtx = { ...ctx, pluginConfig: config };
+        const pluginGen = pluginFn(pluginCtx);
+        let result = pluginGen.next();
+        while (!result.done) {
+          result = pluginGen.next();
+        }
+        cb();
       });
     } else {
       this.map.for(hook).tap(name, (ctx) => {
@@ -101,11 +111,18 @@ const hooks = {
   },
   call(hookName, ctx) {
     const hook = this.map.get(hookName);
-    if (hook !== undefined && hook.taps && hook.taps.length > 0) {
-      hook.callAsync(ctx, () => {
-        log.i(`✨ Tapable: hook ${chalk.underline(hookName)} done.`);
-      });
-    }
+    log.d(`✨ Tapable: hook ${chalk.underline(hookName)} called. ${hook.taps.length} plugins tapped will be run.`);
+    return new Promise((resolve) => {
+      log.d(chalk.gray(JSON.stringify(hook.taps)));
+      if (hook !== undefined && hook.taps && hook.taps.length > 0) {
+        hook.callAsync(ctx, () => {
+          log.i(`✨ Tapable: hook ${chalk.underline(hookName)} done.`);
+          resolve();
+        });
+      } else {
+        resolve();
+      }
+    });
   },
 };
 
@@ -138,7 +155,7 @@ async function start({ name, preset, ...rest }) {
   const ctx = { options, zprc };
 
   // call hook "before-create"
-  hooks.call('before-create', ctx);
+  await hooks.call('before-create', ctx);
 
   // create project directory
   await createProject(ctx);
@@ -191,7 +208,7 @@ async function initProject(ctx) {
   log.i('Init project: begin to init project.');
 
   // call hook "before-init"
-  hooks.call('before-init', ctx);
+  await hooks.call('before-init', ctx);
 
   const { zprc } = ctx;
   const { modules } = zprc.init || {};
@@ -222,7 +239,7 @@ async function initProject(ctx) {
   }
 
   // call hook "after-module-all"
-  hooks.call('after-module-all', ctx);
+  await hooks.call('after-module-all', ctx);
 
   log.i('Init project: moving project files...');
   log.d('Init project: moving project files from ' + chalk.underline(ctx.zpDestPath) + ' to ' + chalk.underline(ctx.appPath));
@@ -236,7 +253,7 @@ async function initProject(ctx) {
   }
 
   // call hook "after-init"
-  hooks.call('after-init', ctx);
+  await hooks.call('after-init', ctx);
 
   const shellCwd = ctx.appPath;
   log.d('Init project: shell cwd = ' + chalk.underline(shellCwd));
@@ -257,7 +274,7 @@ async function initProject(ctx) {
   log.i('Init project: project initialization done.');
 
   // call hook "after-create"
-  hooks.call('after-create', ctx);
+  await hooks.call('after-create', ctx);
 }
 
 async function initProjectModule(module, ctx) {
@@ -265,7 +282,7 @@ async function initProjectModule(module, ctx) {
   const { type, defaultRepo, repos } = module;
 
   // call hook "before-module-install"
-  hooks.call('before-module-install', { ...ctx, module });
+  await hooks.call('before-module-install', { ...ctx, module });
 
   log.i('Init project module: start project module, type = ', chalk.underline(type));
 
@@ -302,7 +319,7 @@ async function initProjectModule(module, ctx) {
   execShellSync(sh, 3001, `Unknown error of cmd: ${chalk.underline(sh)}. Check your git client and this maybe an error of that.`);
 
   // call hook "before-module-install"
-  hooks.call('before-module-install', { ...ctx, module });
+  await hooks.call('before-module-install', { ...ctx, module });
 
   if (isDebugMode) {
     log.d('Init project module: back-up template to ' + chalk.underline(`.${repoObj.path}`));
@@ -326,7 +343,7 @@ async function initProjectModule(module, ctx) {
   moduleCtx.moduleConfig = moduleConfig;
 
   // call hook "before-module-middleware"
-  hooks.call('before-module-middleware', { ...ctx, moduleCtx });
+  await hooks.call('before-module-middleware', { ...ctx, moduleCtx });
 
   // first version: only support object of middleware package name and version, such as `{ '@zppack/zp-vars': '0.1.0' }`.
   const middlewares = Object.entries(moduleConfig.middlewares || {});
@@ -374,7 +391,7 @@ async function initProjectModule(module, ctx) {
   ctx.options = moduleCtx.options;
 
   // call hook "before-module-merge"
-  hooks.call('before-module-merge', { ...ctx, moduleCtx });
+ await hooks.call('before-module-merge', { ...ctx, moduleCtx });
 
   // merge module results
   log.i('Init project module: moving module files...');
@@ -411,7 +428,7 @@ async function initProjectModule(module, ctx) {
   log.i('Init project module: cleaning up done.');
 
   // call hook "after-module"
-  hooks.call('after-module', { ...ctx, moduleCtx });
+  await hooks.call('after-module', { ...ctx, moduleCtx });
 
   log.i('Init project module: complete a project module.');
 }
