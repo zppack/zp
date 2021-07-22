@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.1](https://github.com/zppack/zp/compare/v0.1.0...v0.1.1) (2021-07-22)
+
+
+### Bug Fixes
+
+* Fix a bug that async plugin did not call the callback function which would break later plugins for the same hook. ([fd09608](https://github.com/zppack/zp/commit/fd096083ce4f22f9d88db2a29291885cce5ab83a))
+
 ## [0.1.0](https://github.com/zppack/zp/compare/v0.0.15...v0.1.0) (2021-06-29)
 
 
