@@ -8,7 +8,8 @@ module.exports = {
     { type: "docs", section: 'Documentations' },
     { type: "style", hidden: true },
     { type: "refactor", section: 'Refactors' },
-    { type: "perf", hidden: true },
+    { type: "perf", hidden: 'Performance' },
+    { type: "build", section: 'Build' },
     { type: "test", hidden: true }
   ]
 };

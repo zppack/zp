@@ -55,3 +55,17 @@
       [[init.plugins.config.list.texts]]
         text = '  # open browser at "localhost:3000"'
         chalk = ['gray']
+
+# [[widgets]]
+#   name = 'CustomCommander'
+#   type = 'local'
+#   # type = 'remote'
+#   # url = '' # remote url(git)
+#   # type = 'npx'
+#   # cmd = ''  # npx command
+#   path = '' # execution file path (node.js)
+#   series = true
+#   injectRet = false  # inject return value to command options
+
+#   [widgets.config]
+
