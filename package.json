@@ -1,6 +1,6 @@
 {
   "name": "@zppack/zp",
-  "version": "0.1.2-alpha.2",
+  "version": "0.1.2-alpha.3",
   "description": "A front-end project engineering system which highly supports customization through modularization, middlewares, plugins and extensions.",
   "keywords": [
     "front-end project engineering",
@@ -26,6 +26,7 @@
     "prepare": "npm run build",
     "release": "standard-version && npm publish --access public",
     "release:first": "standard-version --first-release && npm publish --access public",
+    "release:next": "standard-version --prerelease alpha && npm publish --access public --tag next",
     "postrelease": "git push && git push origin --tags",
     "postrelease:first": "git push -u origin master && git push origin --tags",
     "postinstall": "node dist/scripts/post-install.js",
