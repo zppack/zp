@@ -7,7 +7,8 @@ export default (sh, options, errCode, errMsg) => {
     options = {};
   }
   try {
-    execSync(sh, options);
+    const result = execSync(sh, options);
+    return result.toString();
   } catch(ex) {
     process.exitCode = errCode;
     throw Error(errMsg);

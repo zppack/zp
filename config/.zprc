@@ -1,5 +1,24 @@
 # TOML v1.0
 
+[[extensions]]
+  name = 'Version Update Tips'
+  action = 'script'
+  type = 'inner'
+
+  [extensions.config]
+    path = '../lib/update-util.js' # relative path to bin
+
+[[extensions]]
+  name = 'Init Tool'
+  action = 'command'
+  type = 'inner'
+  sync = true
+
+  [extensions.config]
+    command = 'init [name]'
+    desc = 'Initialize a new project'
+    aliases = ['create', 'new']
+
 [init]
 
 [[init.modules]]

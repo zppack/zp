@@ -3,8 +3,9 @@
 import program from 'commander';
 import chalk from 'chalk';
 import log from '@zppack/log';
+import assembleExtensions from '../lib/assemble-extensions';
 import pkg from '../../package.json';
-import '../lib/update-util';
+// import '../lib/update-util';
 
 program.version(pkg.version, '-v, --version');
 
@@ -18,9 +19,11 @@ program.option('-d, --debug', 'debug mode')
     }
   });
 
-program.command('init <name>', 'Initialize a new project')
-  .aliases(['create', 'new']);
+assembleExtensions(program).then(() => {
+  program.parse(process.argv);
+});
 
-program.parse(process.argv);
+// program.command('init <name>', 'Initialize a new project')
+//   .aliases(['create', 'new']);
 
 // const opts = program.opts();

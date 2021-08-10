@@ -2,6 +2,7 @@ import path from 'path';
 import fse from 'fs-extra';
 import Toml from '@ltd/j-toml';
 import { GLOBAL_CONFIG_HOME, GLOBAL_CUSTOM_CONFIG_NAME, GLOBAL_CONFIG_NAME } from './constants';
+import { ACTION } from './assemble-extensions';
 
 function parse(content) {
   // return content.trim().split('\n').reduce((acc, line) => {
@@ -32,7 +33,18 @@ export default (preset) => {
         globalConfig = parse(globalConfigContent);
       }
 
-      resolve({ ...globalConfig, ...customConfig });
+      const extensionsMap = [...globalConfig.extensions, ...customConfig.extensions].reduce((acc, next) => {
+        if (next.action === ACTION.script && next.name) {
+          acc[next.name] = next;
+        }
+        if (next.action === ACTION.command && next.config?.command) {
+          acc[next.config.command.split(' ')[0]] = next;
+        }
+        return acc;
+      }, {});
+      const extensions = Object.values(extensionsMap);
+
+      resolve({ ...globalConfig, ...customConfig, extensions });
     } catch (ex) {
       process.exitCode = 3000;
       reject(ex);

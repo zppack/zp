@@ -14,6 +14,9 @@
 - `3000`: i/o error
   - `3001`: cmd git error
   - `3002`: cmd npm error
+- `4000`: extensions cmd error
+  - `4001`: script extension cmd error
+  - `4002`: command extension cmd error
 
 ## words
 
@@ -58,3 +61,32 @@
 一个插件 plugin 是一个 js 函数，可以是同步的，也可以是异步的，使用普通函数或 `async` 函数进行区分；
 
 当普通函数和异步函数插件同时 tap into 一个 hook 时，依然会按配置顺序执行，后面的插件将等待的异步插件执行完毕才开始执行。
+
+### 扩展 （extensions）
+
+1. name 扩展的名字
+1. type 脚本类型，根据 action 不同，行为有所不同，具体看下面 action 说明
+1. config 扩展的其他配置参数，常见的有 config.path, config.cmd 等，具体看下面 action 说明
+1. sync 是否同步执行，布尔值；如果配置同步执行，但扩展脚本为异步脚本，则该脚本必须是 async 方法才能同步执行
+1. injectRet 是否把返回值注入到命令 options 中，暂不支持。
+1. action 扩展执行机制。"script": 立即执行; "command": 添加一个子命令
+    1. action = 'script' 立即执行脚本
+        1. type = 'inner' 执行包内脚本 path.resolve(__dirname, ${config.path})，通过 require 执行
+        1. type = 'local' 执行当前工作目录本地脚本 path.resolve(process.cwd(), ${config.path})，通过 require 执行
+        1. type = 'remote' 执行远程脚本，config.path 必须是 js 脚本文件，且必须是 es5 语法，通过 new Function 执行，暂不支持
+        1. type = 'cmd' 执行命令行命令 (child_process.exec/child_process.execSync ${config.cmd})
+        1. type = 'npm' 执行 npm 包中的脚本，全局安装通过 require 执行
+    1. action = 'command' 附加子命令
+        1. config
+            1. config.command 命令名 + 参数
+            1. config.desc 命令描述
+            1. config.args 参数，二维数组
+            1. config.opts 配置项，二维数组
+            1. config.alias 别名
+            1. config.aliases 多个别名，数组
+        1. type
+            1. type = 'inner' 子命令为包内子命令
+            1. type = 'local' 子命令为执行本地脚本，path.resolve(process.cwd(), ${config.path})，通过 require 执行
+            1. type = 'remote' 子命令为执行远程脚本，config.path 必须是 js 脚本文件，且必须是 es5 语法，通过 new Function 执行，暂不支持
+            1. type = 'cmd' 子命令再执行一个命令行命令，需 config.cmd
+            1. type = 'npm' 子命令执行一个 npm 包，执行时才进行本地检查安装 ${config.pkgName}@${config.pkgVersion}，然后 require 执行。（如果该 npm 包是 cli，建议通过 "type = 'cmd' & config.cmd = 'npx xxx'" 方式配置）
