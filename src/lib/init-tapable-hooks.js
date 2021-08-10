@@ -1,6 +1,7 @@
 import { HookMap, AsyncSeriesHook } from 'tapable';
 import log from '@zppack/log';
 import chalk from 'chalk';
+import importGlobal from 'import-global';
 import execShellSync from './shell-util';
 
 // tapable hooks
