@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.2-alpha.0](https://github.com/zppack/zp/compare/v0.1.1...v0.1.2-alpha.0) (2021-08-10)
+
+
+### Build
+
+* upgrade least required node version to v14 to support grammar `?.` ([f88012c](https://github.com/zppack/zp/commit/f88012ced1358ff7c7d1668755ab9dfa33fd4472))
+
 ### [0.1.1](https://github.com/zppack/zp/compare/v0.1.0...v0.1.1) (2021-07-22)
 
 

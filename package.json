@@ -1,7 +1,7 @@
 {
   "name": "@zppack/zp",
-  "version": "0.1.1",
-  "description": "A front-end project engineering system which highly supports customization through modularization, middlewares and plugins.",
+  "version": "0.1.2-alpha.0",
+  "description": "A front-end project engineering system which highly supports customization through modularization, middlewares, plugins and extensions.",
   "keywords": [
     "front-end project engineering",
     "project engineering",
@@ -46,20 +46,21 @@
     "@zppack/glob": "^1.0.1",
     "@zppack/log": "^1.0.2",
     "chalk": "^4.1.0",
-    "commander": "^7.1.0",
-    "fs-extra": "^9.1.0",
+    "commander": "^8.1.0",
+    "fs-extra": "^10.0.0",
     "import-global": "^0.1.0",
     "inquirer": "^8.0.0",
     "merge-packages": "^0.1.5",
+    "npm-package-check": "^1.0.3",
     "tapable": "^2.2.0",
     "update-notifier": "^5.1.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.13.0",
-    "@babel/core": "^7.13.8",
-    "@babel/preset-env": "^7.13.9",
+    "@babel/cli": "^7.14.8",
+    "@babel/core": "^7.15.0",
+    "@babel/preset-env": "^7.15.0",
     "rimraf": "^3.0.2",
-    "standard-version": "^9.1.1"
+    "standard-version": "^9.3.1"
   },
   "engines": {
     "node": ">=14",
