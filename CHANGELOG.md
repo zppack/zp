@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.2-alpha.5](https://github.com/zppack/zp/compare/v0.1.2-alpha.4...v0.1.2-alpha.5) (2021-08-10)
+
+
+### Features
+
+* add extensions and refactor subcommanders ([41ba3e3](https://github.com/zppack/zp/commit/41ba3e35fcada2ea6784e4d51e7b380a017badfe))
+
+
+### Bug Fixes
+
+* fix error that ecexShellSync not be imported in init-tapable-hooks.js ([6b80133](https://github.com/zppack/zp/commit/6b8013332f03adad875d6fd1e489791fda5f678f))
+
 ### [0.1.2-alpha.4](https://github.com/zppack/zp/compare/v0.1.2-alpha.3...v0.1.2-alpha.4) (2021-08-10)
 
 ### [0.1.2-alpha.3](https://github.com/zppack/zp/compare/v0.1.2-alpha.2...v0.1.2-alpha.3) (2021-08-10)
