@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.2-alpha.6](https://github.com/zppack/zp/compare/v0.1.2-alpha.5...v0.1.2-alpha.6) (2021-08-10)
+
+
+### Bug Fixes
+
+* fix import errors ([96aee56](https://github.com/zppack/zp/commit/96aee564443b1faaf1d3c71a2bd9d1075692e546))
+
 ### [0.1.2-alpha.5](https://github.com/zppack/zp/compare/v0.1.2-alpha.4...v0.1.2-alpha.5) (2021-08-10)
 
 
