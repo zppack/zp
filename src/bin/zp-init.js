@@ -237,9 +237,6 @@ async function initProjectModule(module, ctx) {
   log.d('Init project module: executing command: ' + chalk.blue(sh));
   execShellSync(sh, 3001, `Unknown error of cmd: ${chalk.underline(sh)}. Check your git client and this maybe an error of that.`);
 
-  // call hook "before-module-install"
-  await hooks.call('before-module-install', { ...ctx, module });
-
   if (isDebugMode) {
     log.d('Init project module: back-up template to ' + chalk.underline(`.${repoObj.path}`));
     fse.copySync(path.join(zpPath, repoObj.path), path.join(zpPath, `.${repoObj.path}`));
