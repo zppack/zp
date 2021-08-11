@@ -3,6 +3,7 @@
 import program from 'commander';
 import chalk from 'chalk';
 import log from '@zppack/log';
+import getZprc from '../lib/zprc';
 import assembleExtensions from '../lib/assemble-extensions';
 import pkg from '../../package.json';
 // import '../lib/update-util';
@@ -19,11 +20,15 @@ program.option('-d, --debug', 'debug mode')
     }
   });
 
-assembleExtensions(program).then(() => {
+getZprc().then((zprc) => {
+  const { extensions = [] } = zprc;
+  if (!extensions || !extensions.length) {
+    log.d('Extensions: no extensions config.');
+    return [];
+  }
+  return assembleExtensions(extensions, program);
+}).then(() => {
   program.parse(process.argv);
 });
-
-// program.command('init <name>', 'Initialize a new project')
-//   .aliases(['create', 'new']);
 
 // const opts = program.opts();

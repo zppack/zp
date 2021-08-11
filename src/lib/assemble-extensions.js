@@ -2,7 +2,6 @@ import path from 'path';
 import log from '@zppack/log';
 import fse from 'fs-extra';
 import { ensureVersionImport, ensureImport, INSTALL_OPTS } from 'npm-package-check';
-import getZprc from './zprc';
 import execShellSync from './shell-util';
 
 export const ACTION = {
@@ -154,31 +153,26 @@ const useExtension = async (extension, program) => {
   throw Error('Extension action "' + action + '" is not supported now.');
 };
 
-const assembleExtensions = async (program) => {
-  const zprc = await getZprc();
-  const { extensions = [] } = zprc;
-  if (!extensions || !extensions.length) {
-    log.d('Extensions: no extensions config.');
-    return [];
-  }
-
+const assembleExtensions = async (extensions, program) => {
   const exList = [];
-  const len = extensions.length;
-  let exIndex = 0;
-  while (exIndex < len) {
-    const ex = extensions[exIndex];
-    if (ex && ex?.action && ex?.type && validActioin(ex.action) && validType(ex.type)) {
-      try {
-        log.d('Extensions: using extension ' + ex.name);
-        await useExtension(extensions[exIndex], program);
-        exList.push(ex.name || 'Unknown Extension');
-      } catch (e) {
-        log.e('Extensions: assembling extension at index ' + exIndex + ' throws an exception.' + e);
+  if (extensions && extensions.length > 0) {
+    const len = extensions.length;
+    let exIndex = 0;
+    while (exIndex < len) {
+      const ex = extensions[exIndex];
+      if (ex && ex?.action && ex?.type && validActioin(ex.action) && validType(ex.type)) {
+        try {
+          log.d('Extensions: using extension ' + ex.name);
+          await useExtension(extensions[exIndex], program);
+          exList.push(ex.name || 'Unknown Extension');
+        } catch (e) {
+          log.e('Extensions: assembling extension at index ' + exIndex + ' throws an exception.' + e);
+        }
+      } else {
+        log.w('Extensions: wrong extension config at index ' + exIndex + ', skipped.');
       }
-    } else {
-      log.w('Extensions: wrong extension config at index ' + exIndex + ', skipped.');
+      exIndex += 1;
     }
-    exIndex += 1;
   }
   log.d('Extensions: ' + exList.length + ' extensions are assembled.', exList);
   return exList;
