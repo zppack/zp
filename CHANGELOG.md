@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.2-alpha.8](https://github.com/zppack/zp/compare/v0.1.2-alpha.7...v0.1.2-alpha.8) (2021-08-11)
+
+
+### Refactors
+
+* read extensions config from main process ([db7d385](https://github.com/zppack/zp/commit/db7d3854a2374782cced03a6b28aa670aef233ea))
+
 ### [0.1.2-alpha.7](https://github.com/zppack/zp/compare/v0.1.2-alpha.6...v0.1.2-alpha.7) (2021-08-11)
 
 
