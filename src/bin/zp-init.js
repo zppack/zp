@@ -30,6 +30,7 @@ program.version(pkg.version, '-v, --version');
 
 program
   .option('-p, --preset <preset-name>', 'Using specific config presets')
+  .option('-f, --force', 'Clean up directory (if exists) before init')
   .arguments('[name]')
   .action((name, options, command) => {
     // log.d('options: ', options, command.opts());
@@ -113,14 +114,18 @@ async function createProject(ctx) {
   }
 
   if (fse.existsSync(options.name)) {
-    log.d('Create project: already exist project directory ' + chalk.underline(options.name));
-    process.exitCode = 1000;
-    throw Error(`Directory ${options.name} already exist. Try another name or remove the existing directory.`);
-  } else {
-    fse.mkdirSync(options.name);
-    ctx.appPath = path.resolve(options.name);
-    log.i('Create project: project directory ' + chalk.underline(options.name) + ' created.');
+    if (options.force) {
+      log.d('Create project: cleaning up project directory ' + chalk.underline(options.name));
+      fse.removeSync(options.name);
+    } else {
+      log.d('Create project: already exist project directory ' + chalk.underline(options.name));
+      process.exitCode = 1000;
+      throw Error(`Directory ${options.name} already exist. Try another name or remove the existing directory.`);
+    }
   }
+  fse.mkdirSync(options.name);
+  ctx.appPath = path.resolve(options.name);
+  log.i('Create project: project directory ' + chalk.underline(options.name) + ' created.');
 }
 
 async function initProject(ctx) {
