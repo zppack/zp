@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.2-alpha.7](https://github.com/zppack/zp/compare/v0.1.2-alpha.6...v0.1.2-alpha.7) (2021-08-11)
+
+
+### Features
+
+* add -f, --force option to zp-init to clean up directory before init when the directory already exists. ([b267527](https://github.com/zppack/zp/commit/b267527d13ffbfd0bc0be649b10f4a89228d4a23))
+
+
+### Bug Fixes
+
+* add installOpts param for extensions in type `npm` ([6791f0f](https://github.com/zppack/zp/commit/6791f0f5c0609f07c34e36bab0fb7bbdc209921c))
+* remove wrong duplicate hooks call ([750c9e9](https://github.com/zppack/zp/commit/750c9e9f764748d18c549278990479c366c57bcb))
+
 ### [0.1.2-alpha.6](https://github.com/zppack/zp/compare/v0.1.2-alpha.5...v0.1.2-alpha.6) (2021-08-10)
 
 
