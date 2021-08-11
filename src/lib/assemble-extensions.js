@@ -82,11 +82,11 @@ const useExtension = async (extension, program) => {
         break;
       case 'npm':
         {
-          const { pkgName, pkgVersion } = config;
+          const { pkgName, pkgVersion, installOpts = INSTALL_OPTS.global } = config;
           if (pkgName) {
             const script = pkgVersion
-              ? ensureVersionImport(pkgName, pkgVersion, { installOpts: INSTALL_OPTS.global })
-              : ensureImport(pkgName, { installOpts: INSTALL_OPTS.global });
+              ? ensureVersionImport(pkgName, pkgVersion, { installOpts })
+              : ensureImport(pkgName, { installOpts });
             await execFn(script, sync, [program]);
           }
         }
@@ -135,11 +135,11 @@ const useExtension = async (extension, program) => {
       case 'npm':
         {
           p.action(async (...rest) => {
-            const { pkgName, pkgVersion } = config;
+            const { pkgName, pkgVersion, installOpts = INSTALL_OPTS.global } = config;
             if (pkgName) {
               const script = pkgVersion
-                ? await ensureVersionImport(pkgName, pkgVersion, { installOpts: INSTALL_OPTS.global })
-                : await ensureImport(pkgName, { installOpts: INSTALL_OPTS.global });
+                ? await ensureVersionImport(pkgName, pkgVersion, { installOpts })
+                : await ensureImport(pkgName, { installOpts });
               await execFn(script, sync, rest);
             }
           });
