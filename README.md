@@ -8,8 +8,8 @@ A front-end project engineering system which highly supports customization throu
 - [x] Initialization modules support processing middlewares
 - [x] Support plugins with tapable hooks
 - [x] Support init config preset
-- [ ] Project management tool
-- [ ] Support customize cli command
+- [x] Support customize cli command
+- [x] Project management tool (through extensions)
 - [ ] Update and upgrade mechanism and tools
 - [ ] Developing server improvement
 - [ ] Building tool improvement
