@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.2.0](https://github.com/zppack/zp/compare/v0.1.2-alpha.8...v0.2.0) (2021-08-26)
+
 ### [0.1.2-alpha.8](https://github.com/zppack/zp/compare/v0.1.2-alpha.7...v0.1.2-alpha.8) (2021-08-11)
 
 
