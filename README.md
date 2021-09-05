@@ -43,6 +43,10 @@ Execute the command above and then follow the interactive prompts.
 
 - `debug`: "--debug" or "-d" options will switch on debug mode under which you can get some extra logs that helps debug.
 
+### Extensions
+
+See [detail](docs/brief.md).
+
 ### Config modules
 
 Global config file locates at `%USERHOME%/.zp/.zprc`.
@@ -50,12 +54,16 @@ You can create a `.user.zprc` file at the same directory to customize your zp.
 
 #### How to write a `.user.zprc` config file?
 
-> To be completed...
+> Docs to be completed...
 
 #### Config Presets
 
 Write a config file named as `.{preset-name}.zprc`. Then run `zp init --preset {preset-name}`
 ## Contributing
+
+#### Add custom extensions
+
+> Docs to be completed...
 
 [How to contribute to this?](CONTRIBUTING.md)
 

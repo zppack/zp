@@ -5,6 +5,7 @@
 - mac:
   - `~/.zprc`: global common config
   - `~/.user.zprc`: global custom config
+  - `~/.*.zprc`: init preset config
 
 ## process exit code
 
